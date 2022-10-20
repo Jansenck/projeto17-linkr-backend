@@ -4,10 +4,14 @@ import cors from "cors";
 import chalk from "chalk";
 dotenv.config();
 
+import hashtagRouter from "./routes/hashtag.routes.js";
+
 const server = express();
 
 server.use(cors());
 server.use(express.json());
+
+server.use(hashtagRouter);
 
 server.get("/status", (req, res) => {
     res.status(200).send("Tudo certo!");
