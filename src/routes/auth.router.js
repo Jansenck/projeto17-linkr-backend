@@ -1,14 +1,12 @@
 import express from "express";
-import { signUp } from "../controllers/auth.controller.js";
-import { validateUser } from "../middlewares/auth.middleware.js";
+import { signIn, signUp } from "../controllers/auth.controller.js";
+import { validateLogin, validateUser } from "../middlewares/auth.middleware.js";
 
 
 const authRouter = express.Router();
 
-authRouter.post("/signup", validateUser, signUp) ;
-authRouter.get ('/status', (req, res)=>{
-    res.send('Tudo funcionando!')
-})
+authRouter.post("/sign-up", validateUser, signUp) ;
+authRouter.post("/sign-in", validateLogin, signIn) ;
 
 
 export default authRouter;

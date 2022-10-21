@@ -2,12 +2,12 @@ import joi from 'joi';
 
 
 const signUpSchema = joi.object({
-    email: 
+    email:
         joi
             .string()
             .regex(/\S+@\S+\.\S+/)
             .required(),
-    password: 
+    password:
         joi
             .string()
             .min(6)
@@ -17,14 +17,27 @@ const signUpSchema = joi.object({
             .string()
             .min(1)
             .required(),
-    image: 
+    image:
         joi
             .string()
             .regex(/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/)
             .required()
 });
 
+const signInSchema = joi.object({
+    email:
+        joi
+            .string()
+            .regex(/\S+@\S+\.\S+/)
+            .required(),
+    password:
+        joi
+            .string()
+            .min(6)
+            .required()
+});
 
 
 
-export { signUpSchema}
+
+export { signUpSchema, signInSchema }
