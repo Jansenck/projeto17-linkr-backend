@@ -36,4 +36,29 @@ async function listpublicationByHashtag(req, res) {
     }
 }
 
-export {listpublicationByHashtag};
+async function listTrendingHashtags(req, res) {
+    try {
+        const hashtags = (await connection.query(`
+        SELECT 
+            hashtag.id,
+            hashtag.name,
+        COUNT(hashtag.name) AS count
+        FROM hashtag
+        JOIN "hashtagsPublication" ON "hashtagsPublication"."hashtagId" = hashtag.id
+        GROUP BY 
+            hashtag.name,
+        hashtag.id
+        ORDER BY count DESC;
+        `)).rows;
+
+        return res.status(200).send(hashtags);
+    } catch (error) {
+        console.log(error.message);
+        return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
+export {
+    listpublicationByHashtag,
+    listTrendingHashtags,
+};
