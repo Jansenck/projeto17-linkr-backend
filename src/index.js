@@ -5,11 +5,13 @@ import chalk from "chalk";
 dotenv.config();
 
 import userRouter from "./routes/user.router.js";
+import authRouter from "./routes/auth.router.js";
 
 const server = express();
 server.use(cors());
 server.use(express.json());
 
+server.use(authRouter);
 server.use(userRouter);
 
 server.listen(process.env.PORT, () => {
