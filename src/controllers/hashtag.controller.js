@@ -6,25 +6,32 @@ async function listpublicationByHashtag(req, res) {
 
     try {
         const publicationByHashtag = await connection.query(`
-        SELECT
-            "hashtagsPublication".id,
+        SELECT 
+            publications.id,
             publications.link,
             publications.description,
             users.username,
             users.image,
-            COUNT(likes.id) AS likes
-        FROM hashtag 
-        JOIN "hashtagsPublication" ON hashtag.id = "hashtagsPublication"."hashtagId" 
-        JOIN publications ON publications.id = "hashtagsPublication"."publicationId" 
+            COUNT(likes.id) AS likes,
+            hashtag.name AS hashtag
+        FROM publications
         JOIN users ON users.id = publications."userId"
         JOIN likes ON likes."publicationId" = publications.id
-        GROUP BY likes.id 
-        WHERE hashtag.name = $1
-        `, [hashtag]);
+        JOIN "hashtagsPublication" ON "hashtagsPublication"."publicationId" = publications.id
+        JOIN hashtag ON "hashtagsPublication"."hashtagId" = hashtag.id
+        GROUP BY 
+            publications.id,
+            users.username,
+            users.image,
+            hashtag.name
+        ;
+        `);
+
+        const postFilterByHashtags = publicationByHashtag.rows.filter(publication => publication.hashtag === hashtag);
         
-        return res.status(200).send(publicationByHashtag);
+        return res.status(200).send(postFilterByHashtags);
     } catch (error) {
-        console.log(error.messgage);
+        console.log(error.message);
         return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }
