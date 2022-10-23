@@ -28,7 +28,7 @@ async function listpublicationByHashtag(req, res) {
         `);
 
         const postFilterByHashtags = publicationByHashtag.rows.filter(publication => publication.hashtag === hashtag);
-        
+        //console.log(postFilterByHashtags)
         return res.status(200).send(postFilterByHashtags);
     } catch (error) {
         console.log(error.message);
@@ -58,7 +58,29 @@ async function listTrendingHashtags(req, res) {
     }
 }
 
+async function listHashtagsByPublication(req, res) {
+    const {publicationId} = res.locals;
+
+    try {
+        const hashtags = (await connection.query(`
+        SELECT
+            "hashtagsPublication".id,
+            hashtag.name
+            FROM "hashtagsPublication"
+            JOIN hashtag ON hashtag.id = "hashtagsPublication"."hashtagId"
+            JOIN publications ON publications.id = "hashtagsPublication"."publicationId"
+            WHERE publications.id = $1
+        ;
+        `, [publicationId])).rows
+        return res.status(200).send(hashtags)
+    } catch (error) {
+        console.log(error.message);
+        return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
 export {
     listpublicationByHashtag,
     listTrendingHashtags,
+    listHashtagsByPublication,
 };
