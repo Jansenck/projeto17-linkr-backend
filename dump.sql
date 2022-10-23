@@ -185,7 +185,7 @@ CREATE TABLE public.users (
     username character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
     image text NOT NULL,
-    pass text NOT NULL,
+    password text NOT NULL,
     "createdAt" timestamp without time zone DEFAULT now() NOT NULL
 );
 

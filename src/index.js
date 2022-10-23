@@ -6,19 +6,19 @@ dotenv.config();
 
 import hashtagRouter from "./routes/hashtag.routes.js";
 
-const server = express();
+import userRouter from "./routes/user.router.js";
+import authRouter from "./routes/auth.router.js";
 
+const server = express();
 server.use(cors());
 server.use(express.json());
 
 server.use(hashtagRouter);
-
-server.get("/status", (req, res) => {
-    res.status(200).send("Tudo certo!");
-})
+server.use(authRouter);
+server.use(userRouter);
 
 server.listen(process.env.PORT, () => {
     console.log(chalk.bold("=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.="))
-    console.log(chalk.green(`Runing on port ${process.env.PORT}`))
+    console.log(chalk.green(`Running on port ${process.env.PORT}`))
     console.log(chalk.bold("=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.="))
 })
