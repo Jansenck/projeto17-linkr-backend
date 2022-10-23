@@ -4,6 +4,8 @@ import cors from "cors";
 import chalk from "chalk";
 dotenv.config();
 
+import hashtagRouter from "./routes/hashtag.routes.js";
+
 import userRouter from "./routes/user.router.js";
 import authRouter from "./routes/auth.router.js";
 
@@ -11,6 +13,7 @@ const server = express();
 server.use(cors());
 server.use(express.json());
 
+server.use(hashtagRouter);
 server.use(authRouter);
 server.use(userRouter);
 
