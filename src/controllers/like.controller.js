@@ -11,6 +11,12 @@ async function likePublication(req, res) {
             return res.sendStatus(401);
         }
 
+        const postIsliked = (await connection.query('SELECT * FROM likes WHERE "userId" = $1 AND "publicationId" = $2;', [session.userId, publicationId])).rows[0];
+        if(postIsliked) {
+            await connection.query('DELETE FROM likes WHERE "userId" = $1 AND "publicationId" = $2;', [session.userId, publicationId]);
+            return res.sendStatus(204);
+        }
+
         await connection.query('INSERT INTO likes ("publicationId", "userId") VALUES ($1, $2)', [publicationId, session.userId]);
         return res.sendStatus(201);
     } catch (error) {
