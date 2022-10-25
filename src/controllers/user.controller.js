@@ -7,41 +7,22 @@ async function listPublications(req, res){
 
         const publications = await connection.query(
 
-            `SELECT 
-                publications.id AS "id",
-                users.username,
-                users.image,
+            `
+            SELECT
+                publications.id,
+                publications."userId",
+                u1.username,
                 publications.link,
-                publications.description
+                publications.description,
+                u1.image AS "profilePicture",
 
-                FROM "publications"
-                JOIN "users" ON publications."userId" = users.id
-                JOIN "likes" ON likes."publicationId" = publications.id
-                ORDER BY publications.id DESC
-                LIMIT 20;`
+                u2.username AS "whoLiked"
+                
+            FROM publications 
+            JOIN users u1 ON u1.id = publications."userId"
+            LEFT JOIN likes ON likes."publicationId" = publications.id 
+            LEFT JOIN users u2 ON u2.id = likes."userId";`
         );
-
-        const publicationsLikes = publications.rows.map( async publication => {
-
-            const { id } = publication;
-
-            const likes = (await connection.query(
-
-                `SELECT 
-                COUNT(likes."publicationId") 
-                FROM likes
-                JOIN publications ON likes."publicationId" = publications.id
-                WHERE "publicationId" = $1;`,
-                [id]
-
-            )).rows[0];
-
-            return { ...publication, likes }
-
-            
-        });
-
-        console.log(publicationsLikes)
 
         return res.status(StatusCodes.OK).send(publications.rows);
 
@@ -55,13 +36,11 @@ async function publish(req, res){
 
     try {
 
-        /* TODO: apaagar o userId improvisado */
-
         const { link, description, userId } = req.body;
 
         await connection.query(
             `INSERT INTO "publications" (link, description, "userId") VALUES ($1, $2, $3);`, 
-            [link, description, 1]
+            [link, description, userId]
         );
 
         return res.sendStatus(StatusCodes.CREATED);
