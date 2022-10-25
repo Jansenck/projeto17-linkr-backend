@@ -1,6 +1,37 @@
 import { StatusCodes } from  "http-status-codes";
 import connection from "../database/database.js";
 
+async function listPublications(req, res){
+
+    try {
+
+        const publications = await connection.query(
+
+            `
+            SELECT
+                publications.id,
+                publications."userId",
+                u1.username,
+                publications.link,
+                publications.description,
+                u1.image AS "profilePicture",
+
+                u2.username AS "whoLiked"
+                
+            FROM publications 
+            JOIN users u1 ON u1.id = publications."userId"
+            LEFT JOIN likes ON likes."publicationId" = publications.id 
+            LEFT JOIN users u2 ON u2.id = likes."userId";`
+        );
+
+        return res.status(StatusCodes.OK).send(publications.rows);
+
+    } catch (error) {
+        console.error(error);
+        return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
 async function publish(req, res){
 
     try {
@@ -20,4 +51,7 @@ async function publish(req, res){
     }
 }
 
-export { publish };
+export { 
+    listPublications, 
+    publish 
+};
