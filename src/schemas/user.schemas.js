@@ -14,7 +14,6 @@ const validationPublication = joi.object({
     description: 
         joi
             .string()
-            .empty()
 });
 
 export { validationPublication };
