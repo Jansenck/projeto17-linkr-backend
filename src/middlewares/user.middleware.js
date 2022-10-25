@@ -1,14 +1,30 @@
 import { StatusCodes } from "http-status-codes";
-import connection from "../database/database.js";
+import { validationPublication } from "../schemas/user.schemas.js"; 
 
-try {
+async function validatePublication(req,res, next){
 
-    const publicationContent = req.body;
-    if(!publicationContent) return res.sendStatus(StatusCodes.BAD_REQUEST);
+    try {
 
+        const publicationContent = req.body;
+        if(!publicationContent) return res.sendStatus(StatusCodes.BAD_REQUEST);
+
+        const { link, description } = req.body;
+        const isValidPublication = validationPublication.validateAsync({link, description}, {abortEarly: false});
+
+        if(isValidPublication.error){
+            const publicationError = isValidPublication.error.details.map(
+                detail => detail.message
+            );
+            return res.status(StatusCodes.BAD_REQUEST).send(publicationError);
+        }
     
-    
-} catch (error) {
-    console.error(error.message);
-    return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+        console.error(error.message);
+        return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+
+    next();
 }
+
+export { validatePublication };
+
