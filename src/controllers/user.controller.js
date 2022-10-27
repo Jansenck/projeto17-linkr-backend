@@ -73,7 +73,42 @@ async function publish(req, res){
     }
 }
 
+async function listNumberPublications(req, res) {
+    try {
+
+        const publications = (await connection.query(
+
+            `
+            SELECT
+            publications.id,
+            publications."userId",
+            u1.username,
+            publications.link,
+            publications.description,
+            u1.image AS "profilePicture",
+
+            u2.username AS "whoLiked"
+
+            FROM publications 
+            JOIN users u1 ON u1.id = publications."userId"
+            LEFT JOIN likes ON likes."publicationId" = publications.id 
+            LEFT JOIN users u2 ON u2.id = likes."userId"
+            ;`
+        )).rows;
+        //console.log("Total de publicações: " + publications.length)
+
+
+        return res.status(StatusCodes.OK).send({numberPublications: publications.length});
+
+    } catch (error) {
+        console.error(error);
+        return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+    
+};
+
 export { 
     listPublications, 
-    publish 
+    publish,
+    listNumberPublications
 };
