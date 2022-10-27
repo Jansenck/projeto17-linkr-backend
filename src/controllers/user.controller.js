@@ -5,15 +5,8 @@ async function listPublications(req, res){
     const page = parseInt(req.query.page);
     
     let isTheLastPage = false;
-    let start = (page * 3) - 3;
-    let limitPage = start + 3;
-    /*if (page !== undefined && page !== 1) {
-        limitPage = (page) * 3;
-        start = page + limitPage;
-    } else {
-        start = page;
-        limitPage = 3;
-    }*/
+    let start = (page * 10) - 10;
+    let limitPage = start + 10;
 
     try {
 
@@ -35,7 +28,7 @@ async function listPublications(req, res){
             LEFT JOIN likes ON likes."publicationId" = publications.id 
             LEFT JOIN users u2 ON u2.id = likes."userId"
             ORDER BY publications.id DESC 
-            LIMIT 20
+            LIMIT 10
             ;`
         )).rows;
         console.log("Vai de: " + (start))
@@ -43,12 +36,10 @@ async function listPublications(req, res){
         console.log("Tamanho da array: " + publications.length)
 
         //Pegar a última página
-
         const paginatedPublications = publications.slice(start, limitPage);
         //console.log(publications[publications.length - 1])
         if (paginatedPublications.includes(publications[publications.length - 1])) {
             isTheLastPage = true;
-
         }
 
         return res.status(StatusCodes.OK).send({
