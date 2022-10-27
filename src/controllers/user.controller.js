@@ -4,8 +4,9 @@ import connection from "../database/database.js";
 async function listPublications(req, res){
     const page = parseInt(req.query.page);
     
-    let start = (page * 20) - 20;
-    let limitPage = start + 20;
+    let isTheLastPage = false;
+    let start = (page * 3) - 3;
+    let limitPage = start + 3;
     /*if (page !== undefined && page !== 1) {
         limitPage = (page) * 3;
         start = page + limitPage;
@@ -13,7 +14,6 @@ async function listPublications(req, res){
         start = page;
         limitPage = 3;
     }*/
-
 
     try {
 
@@ -35,17 +35,27 @@ async function listPublications(req, res){
             LEFT JOIN likes ON likes."publicationId" = publications.id 
             LEFT JOIN users u2 ON u2.id = likes."userId"
             ORDER BY publications.id DESC 
-            LIMIT 10
+            LIMIT 20
             ;`
         )).rows;
+        console.log("Vai de: " + (start))
+        console.log("Até: " + (limitPage))
+        console.log("Tamanho da array: " + publications.length)
 
-        if (limitPage > publications.length) {
-            return res.status(StatusCodes.OK).send(publications.slice(-10));
-        }
+        //Pegar a última página
 
         const paginatedPublications = publications.slice(start, limitPage);
+        //console.log(publications[publications.length - 1])
+        if (paginatedPublications.includes(publications[publications.length - 1])) {
+            isTheLastPage = true;
 
-        return res.status(StatusCodes.OK).send(paginatedPublications);
+        }
+
+        return res.status(StatusCodes.OK).send({
+            page: page,
+            isTheLastPage: isTheLastPage,
+            publications: paginatedPublications
+        });
 
     } catch (error) {
         console.error(error);
