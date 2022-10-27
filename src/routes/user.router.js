@@ -7,6 +7,6 @@ const route = Router();
 
 route.get("/timeline", listPublications);
 route.post("/timeline", validatePublication, publish);
-route.delete("/timeline/publication/:publicationId", deletePublication);
+route.delete("/timeline/publication/:id", deletePublication);
 
 export default route;

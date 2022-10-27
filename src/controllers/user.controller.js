@@ -25,7 +25,7 @@ async function listPublications(req, res){
             ORDER BY publications.id DESC
             LIMIT 20;`
         );
-        
+
         return res.status(StatusCodes.OK).send(publications.rows);
 
     } catch (error) {
@@ -58,18 +58,10 @@ async function deletePublication(req, res){
     try {
         /* TODO: PEGAR O TOKEN DO CONTEXT */
 
-        const token = "token3"
-        const { publicationId } = req.params;
-        
+        const { id } = req.params;
+
         await connection.query(
-            `SELECT 
-                publications.id,
-                users.id AS "userId",
-                sessions.token
-                FROM publications
-                JOIN users ON publications."userId" = $1
-                JOIN sessions ON sessions.token = $2
-            ;`, [publicationId, token]
+            `DELETE FROM publications WHERE id=$1;`, [id]
         );
 
         return res.sendStatus(StatusCodes.OK);
