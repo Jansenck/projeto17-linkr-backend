@@ -14,14 +14,15 @@ async function listPublications(req, res){
 
             `
             SELECT
-            publications.id,
-            publications."userId",
-            u1.username,
-            publications.link,
-            publications.description,
-            u1.image AS "profilePicture",
+                publications.id,
+                publications."userId",
+                u1.username,
+                publications.link,
+                publications.description,
+                u1.image AS "profilePicture",
 
-            u2.username AS "whoLiked"
+                u2.username AS "whoLiked"
+
 
             FROM publications 
             JOIN users u1 ON u1.id = publications."userId"
@@ -31,9 +32,8 @@ async function listPublications(req, res){
             LIMIT 10
             ;`
         )).rows;
-        console.log("Vai de: " + (start))
-        console.log("Até: " + (limitPage))
-        console.log("Tamanho da array: " + publications.length)
+     
+
 
         //Pegar a última página
         const paginatedPublications = publications.slice(start, limitPage);
@@ -73,6 +73,7 @@ async function publish(req, res){
     }
 }
 
+
 async function listNumberPublications(req, res) {
     try {
 
@@ -100,15 +101,31 @@ async function listNumberPublications(req, res) {
 
         return res.status(StatusCodes.OK).send({numberPublications: publications.length});
 
+async function deletePublication(req, res){
+
+    try {
+        /* TODO: PEGAR O TOKEN DO CONTEXT */
+
+        const { id } = req.params;
+
+        await connection.query(
+            `DELETE FROM publications WHERE id=$1;`, [id]
+        );
+
+        return res.sendStatus(StatusCodes.OK);
+
+
     } catch (error) {
         console.error(error);
         return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
+
     
 };
 
 export { 
     listPublications, 
+    deletePublication,
     publish,
     listNumberPublications
 };
