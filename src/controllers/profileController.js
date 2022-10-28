@@ -21,7 +21,7 @@ export async function getUserPost(req, res){
         const result = (await database.query(`
             SELECT * FROM publications WHERE userId = $1`, [id])).rows[0]
         const name = (await database.query(`
-            SELECT * FROM users WHERE id = $1`, [id])).rows[0]
+            SELECT username FROM users WHERE id = $1`, [id])).rows[0]
         if(!result){
             return res.sendStatus(404)
         }
