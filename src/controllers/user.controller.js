@@ -1,5 +1,6 @@
 import { StatusCodes } from  "http-status-codes";
 import connection from "../database/database.js";
+import urlMetadata from "url-metadata";
 
 async function listPublications(req, res){
 
@@ -26,7 +27,32 @@ async function listPublications(req, res){
             LIMIT 20;`
         );
 
-        return res.status(StatusCodes.OK).send(publications.rows);
+        try {
+
+            const postsWithMetaData = await Promise.all(
+
+                publications.rows.map(async (publication) => {
+                    
+                const metadata = await urlMetadata(publication.link)
+        
+                  return { 
+                    ...publication, 
+                    metadata: [{
+                        title: publication.previewTitle = metadata.title,
+                        image: publication.previewImage = metadata.image,
+                        descriptionLink: publication.previewDescription = metadata.description,
+                        url: publication.previewUrl = metadata.url
+                  }]}
+                })
+              )
+
+            return res.status(StatusCodes.OK).send(postsWithMetaData);
+
+        } catch (error) {
+
+            console.error(error);
+            return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+        }
 
     } catch (error) {
         console.error(error);
