@@ -1,15 +1,12 @@
-/* TODO: AJEITAR BANCO DE DADOS */
-
 import pg from 'pg';
 
 const { Pool } = pg;
 
 const databaseConfig = {
-    host: 'localhost',
-    port: 5432,
-    user: 'postgres',
-    password: 'Bomb15087751',
-    database: 'linkr'
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
 }
 
 const connection = new Pool(databaseConfig);
