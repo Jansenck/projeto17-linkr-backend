@@ -3,10 +3,15 @@ import connection from "../database/database.js";
 import urlMetadata from "url-metadata";
 
 async function listPublications(req, res){
+    const page = parseInt(req.query.page);
+    
+    let isTheLastPage = false;
+    let start = (page * 10) - 10;
+    let limitPage = start + 10;
 
     try {
 
-        const publications = await connection.query(
+        const publications = (await connection.query(
 
             `
             SELECT
@@ -19,14 +24,18 @@ async function listPublications(req, res){
 
                 u2.username AS "whoLiked"
 
+
             FROM publications 
             JOIN users u1 ON u1.id = publications."userId"
             LEFT JOIN likes ON likes."publicationId" = publications.id 
             LEFT JOIN users u2 ON u2.id = likes."userId"
-            ORDER BY publications.id DESC
-            LIMIT 20;`
-        );
+            ORDER BY publications.id DESC 
+            LIMIT 10
+            ;`
+        )).rows;
+     
 
+<<<<<<< HEAD
         try {
 
             const postsWithMetaData = await Promise.all(
@@ -53,6 +62,21 @@ async function listPublications(req, res){
             console.error(error);
             return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
         }
+=======
+
+        //Pegar a última página
+        const paginatedPublications = publications.slice(start, limitPage);
+        //console.log(publications[publications.length - 1])
+        if (paginatedPublications.includes(publications[publications.length - 1])) {
+            isTheLastPage = true;
+        }
+
+        return res.status(StatusCodes.OK).send({
+            page: page,
+            isTheLastPage: isTheLastPage,
+            publications: paginatedPublications
+        });
+>>>>>>> 6fd46ea9dae7f85b3db185a36f9c693b756a3ea4
 
     } catch (error) {
         console.error(error);
@@ -79,6 +103,34 @@ async function publish(req, res){
     }
 }
 
+
+async function listNumberPublications(req, res) {
+    try {
+
+        const publications = (await connection.query(
+
+            `
+            SELECT
+            publications.id,
+            publications."userId",
+            u1.username,
+            publications.link,
+            publications.description,
+            u1.image AS "profilePicture",
+
+            u2.username AS "whoLiked"
+
+            FROM publications 
+            JOIN users u1 ON u1.id = publications."userId"
+            LEFT JOIN likes ON likes."publicationId" = publications.id 
+            LEFT JOIN users u2 ON u2.id = likes."userId"
+            ;`
+        )).rows;
+        //console.log("Total de publicações: " + publications.length)
+
+
+        return res.status(StatusCodes.OK).send({numberPublications: publications.length});
+
 async function deletePublication(req, res){
 
     try {
@@ -92,14 +144,18 @@ async function deletePublication(req, res){
 
         return res.sendStatus(StatusCodes.OK);
 
+
     } catch (error) {
         console.error(error);
         return res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
     }
-}
+
+    
+};
 
 export { 
     listPublications, 
     deletePublication,
-    publish
+    publish,
+    listNumberPublications
 };
