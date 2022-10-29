@@ -3,8 +3,8 @@ import { validationPublication } from "../schemas/user.schemas.js";
 
 async function validatePublication(req,res, next){
 
-    const token = req.headers.authorization?.replace("Bearer ", "");
-    if(!token) return res.sendStatus(StatusCodes.UNAUTHORIZED);
+    //const token = req.headers.authorization?.replace("Bearer ", "");
+    //if(!token) return res.sendStatus(StatusCodes.UNAUTHORIZED);
 
     try {
 

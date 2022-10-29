@@ -256,6 +256,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: hashtag; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.hashtag VALUES (1, 'sql');
 
 
 --
@@ -274,25 +275,45 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: publications; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.publications VALUES (5, 1, 'https://www.youtube.com/watch?v=CLeZyIID9Bo', NULL);
+INSERT INTO public.publications VALUES (6, 1, 'https://www.youtube.com/watch?v=CLeZyIID9Bo', NULL);
+INSERT INTO public.publications VALUES (7, 1, 'https://www.youtube.com/watch?v=CLeZyIID9Bo', 'link do youtube');
+INSERT INTO public.publications VALUES (8, 1, 'https://www.youtube.com/watch?v=CLeZyIID9Bo', 'lo-fi pra nos');
+INSERT INTO public.publications VALUES (12, 1, 'https://www.petz.com.br/blog/wp-content/uploads/2017/09/tudo-sobre-porquinho-da-india.jpg', 'porquinho');
+INSERT INTO public.publications VALUES (13, 1, 'https://www.petz.com.br/blog/wp-content/uploads/2017/09/tudo-sobre-porquinho-da-india.jpg', '');
+INSERT INTO public.publications VALUES (14, 1, 'https://www.petz.com.br/blog/wp-content/uploads/2017/09/tudo-sobre-porquinho-da-india.jpg', '');
+INSERT INTO public.publications VALUES (15, 1, 'https://www.petz.com.br/blog/wp-content/uploads/2017/09/tudo-sobre-porquinho-da-india.jpg', '');
+INSERT INTO public.publications VALUES (16, 1, 'https://www.petz.com.br/blog/wp-content/uploads/2017/09/tudo-sobre-porquinho-da-india.jpg', '''');
+INSERT INTO public.publications VALUES (17, 1, 'https://www.petz.com.br/blog/wp-content/uploads/2017/09/tudo-sobre-porquinho-da-india.jpg', '');
+INSERT INTO public.publications VALUES (18, 5, 'https://static1.purebreak.com.br/articles/5/85/10/5/@/317506--bob-esponja-calca-quadrada-e-as-maiore-amp_article_image-2.jpg', NULL);
+INSERT INTO public.publications VALUES (19, 5, 'https://www.youtube.com', 'assistir');
+INSERT INTO public.publications VALUES (21, 5, 'https://www.youtube.com', 'assistir');
+INSERT INTO public.publications VALUES (22, 1, 'https://www.cifraclub.com.br/', 'aprender a tocar violão');
+INSERT INTO public.publications VALUES (23, 1, 'https://www.cifraclub.com.br/', 'aprender a tocar violão');
 
 
 --
 -- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.sessions VALUES (1, 2, 'token3', true);
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.users VALUES (1, 'jansen', 'jansen@email.com', 'https://www.essemundoenosso.com.br/wp-content/uploads/2015/03/porquinho-da-india-dest.jpg', '123', '2022-10-20 19:01:48.291374');
+INSERT INTO public.users VALUES (2, 'Francine', 'fran_fran@email.com', 'https://meups.com.br/wp-content/uploads/2020/04/Freya.jpg', 'freya123', '2022-10-20 21:08:26.125264');
+INSERT INTO public.users VALUES (3, 'caik', 'caik@email.com', 'https://static1.purebreak.com.br/articles/5/85/10/5/@/317506--bob-esponja-calca-quadrada-e-as-maiore-amp_article_image-2.jpg', '123', '2022-10-22 20:24:21.761883');
+INSERT INTO public.users VALUES (5, 'julia', 'julia@email.com', 'https://static1.purebreak.com.br/articles/5/85/10/5/@/317506--bob-esponja-calca-quadrada-e-as-maiore-amp_article_image-2.jpg', '123', '2022-10-22 20:31:17.319831');
 
 
 --
 -- Name: hashtag_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.hashtag_id_seq', 1, false);
+SELECT pg_catalog.setval('public.hashtag_id_seq', 1, true);
 
 
 --
@@ -313,21 +334,21 @@ SELECT pg_catalog.setval('public.likes_id_seq', 1, false);
 -- Name: publications_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.publications_id_seq', 1, false);
+SELECT pg_catalog.setval('public.publications_id_seq', 23, true);
 
 
 --
 -- Name: sessions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.sessions_id_seq', 1, false);
+SELECT pg_catalog.setval('public.sessions_id_seq', 1, true);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 1, false);
+SELECT pg_catalog.setval('public.users_id_seq', 5, true);
 
 
 --
@@ -347,19 +368,19 @@ ALTER TABLE ONLY public.hashtag
 
 
 --
--- Name: hashtagsPublication hashtagsPublication_pk; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: hashtagsPublication hashtagsPublication_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."hashtagsPublication"
-    ADD CONSTRAINT "hashtagsPublication_pk" PRIMARY KEY (id);
+    ADD CONSTRAINT "hashtagsPublication_pkey" PRIMARY KEY (id);
 
 
 --
--- Name: likes likes_pk; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: likes likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.likes
-    ADD CONSTRAINT likes_pk PRIMARY KEY (id);
+    ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
 
 
 --
@@ -419,35 +440,35 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: hashtagsPublication hashtagsPublication_fk0; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: hashtagsPublication hashtagsPublication_hashtagId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."hashtagsPublication"
-    ADD CONSTRAINT "hashtagsPublication_fk0" FOREIGN KEY ("publicationId") REFERENCES public.publications(id);
+    ADD CONSTRAINT "hashtagsPublication_hashtagId_fkey" FOREIGN KEY ("hashtagId") REFERENCES public.hashtag(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: hashtagsPublication hashtagsPublication_fk1; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: hashtagsPublication hashtagsPublication_publicationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public."hashtagsPublication"
-    ADD CONSTRAINT "hashtagsPublication_fk1" FOREIGN KEY ("hashtagId") REFERENCES public.hashtag(id);
+    ADD CONSTRAINT "hashtagsPublication_publicationId_fkey" FOREIGN KEY ("publicationId") REFERENCES public.publications(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: likes likes_fk0; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.likes
-    ADD CONSTRAINT likes_fk0 FOREIGN KEY ("publicationId") REFERENCES public.publications(id);
-
-
---
--- Name: likes likes_fk1; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: likes likes_publicationId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.likes
-    ADD CONSTRAINT likes_fk1 FOREIGN KEY ("userId") REFERENCES public.users(id);
+    ADD CONSTRAINT "likes_publicationId_fkey" FOREIGN KEY ("publicationId") REFERENCES public.publications(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: likes likes_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.likes
+    ADD CONSTRAINT "likes_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -456,6 +477,14 @@ ALTER TABLE ONLY public.likes
 
 ALTER TABLE ONLY public.publications
     ADD CONSTRAINT publications_fk0 FOREIGN KEY ("userId") REFERENCES public.users(id);
+
+
+--
+-- Name: publications publications_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.publications
+    ADD CONSTRAINT "publications_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
